@@ -1,0 +1,34 @@
+# Binaries
+another-meet
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Go build output
+*.o
+*.a
+*.test
+
+# Dependency directory
+vendor/
+
+# GoReleaser output
+dist/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Credentials and tokens — never commit these
+client_secret_*.json
+token.json
+internal/auth/credentials.json

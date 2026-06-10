@@ -1,0 +1,86 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+
+version: 2
+
+project_name: another-meet
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: another-meet
+    main: ./main.go
+    binary: another-meet
+    env:
+      - CGO_ENABLED=0
+    ldflags:
+      - -s -w
+      - -X github.com/parjanyaacoder/another-meet/cmd.version={{.Version}}
+      - -X github.com/parjanyaacoder/another-meet/cmd.commit={{.Commit}}
+      - -X github.com/parjanyaacoder/another-meet/cmd.date={{.Date}}
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+
+archives:
+  - id: default
+    builds:
+      - another-meet
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    format: tar.gz
+    format_overrides:
+      - goos: windows
+        format: zip
+    files:
+      - README.md
+      - LICENSE
+
+checksum:
+  name_template: "checksums.txt"
+  algorithm: sha256
+
+snapshot:
+  version_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^ci:"
+      - "^chore:"
+      - "^style:"
+      - Merge pull request
+      - Merge branch
+
+brews:
+  - name: another-meet
+    repository:
+      owner: parjanyaacoder
+      name: homebrew-another-meet
+      token: "{{ .Env.GITHUB_TOKEN }}"
+    commit_author:
+      name: goreleaserbot
+      email: bot@goreleaser.com
+    directory: Formula
+    homepage: "https://github.com/parjanyaacoder/another-meet"
+    description: "A CLI tool to create, join, schedule, and invite people to Google Meet meetings from the terminal"
+    license: "MIT"
+    install: |
+      bin.install "another-meet"
+    test: |
+      system "#{bin}/another-meet", "version"
+
+release:
+  github:
+    owner: parjanyaacoder
+    name: another-meet
+  draft: false
+  prerelease: auto
+  name_template: "v{{ .Version }}"
