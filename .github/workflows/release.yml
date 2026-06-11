@@ -37,6 +37,7 @@ jobs:
             }
           }
           EOF
+          git update-index --assume-unchanged internal/auth/credentials.json
 
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v6
