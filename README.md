@@ -22,7 +22,12 @@ $ another-meet create -t "Sprint Planning" -d 1h -a "alice@co.com,bob@co.com"
 ### Homebrew (macOS / Linux)
 
 ```bash
+# Option 1: Direct install
 brew install parjanyaacoder/another-meet/another-meet
+
+# Option 2: Add tap first, then install
+brew tap parjanyaacoder/another-meet
+brew install another-meet
 ```
 
 ### Go Install
