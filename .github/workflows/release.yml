@@ -31,3 +31,5 @@ jobs:
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ANOTHER_MEET_CLIENT_ID: ${{ secrets.ANOTHER_MEET_CLIENT_ID }}
+          ANOTHER_MEET_CLIENT_SECRET: ${{ secrets.ANOTHER_MEET_CLIENT_SECRET }}
