@@ -36,20 +36,34 @@ brew install another-meet
 go install github.com/parjanyaacoder/another-meet@latest
 ```
 
-### NPM / Node.js
+### Node.js (npm / yarn / pnpm / bun)
 
 ```bash
+# npm
 npm install -g another-meet
-# or
+
+# yarn
+yarn global add another-meet
+
+# pnpm
+pnpm add -g another-meet
+
+# bun
 bun install -g another-meet
 ```
 
-### Pip / Python
+### Python (pip / uv / conda)
 
 ```bash
+# pip
 pip install another-meet
-# or
+
+# uv
 uv pip install another-meet
+
+# conda / mamba (via pip since it's on PyPI)
+conda install pip
+pip install another-meet
 ```
 
 ### Binary Download

@@ -5,7 +5,7 @@ const https = require('https');
 const tar = require('tar');
 const unzipper = require('unzipper');
 
-const VERSION = '1.0.2';
+const VERSION = '1.0.3';
 const REPO = 'parjanyaacoder/another-meet';
 
 const platformMap = {
