@@ -1,6 +1,6 @@
 {
   "name": "another-meet",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Manage Google Meet meetings from your terminal",
   "bin": {
     "another-meet": "./run.js"

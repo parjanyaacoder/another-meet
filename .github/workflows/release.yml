@@ -23,6 +23,21 @@ jobs:
         with:
           go-version: "1.22"
 
+      - name: Inject OAuth Credentials
+        run: |
+          cat <<EOF > internal/auth/credentials.json
+          {
+            "installed": {
+              "client_id": "${{ secrets.ANOTHER_MEET_CLIENT_ID }}",
+              "client_secret": "${{ secrets.ANOTHER_MEET_CLIENT_SECRET }}",
+              "project_id": "another-meet",
+              "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+              "token_uri": "https://oauth2.googleapis.com/token",
+              "redirect_uris": ["http://localhost"]
+            }
+          }
+          EOF
+
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v6
         with:
