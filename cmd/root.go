@@ -4,10 +4,62 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/fatih/color"
 	"github.com/parjanyaacoder/another-meet/internal/config"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
+
+func printWelcomeScreen(cmd *cobra.Command) {
+	logo := []string{
+		`  ███████████████    `,
+		`  ██           ██ ██ `,
+		`  ██  M E E T  █████ `,
+		`  ██           ██ ██ `,
+		`  ███████████████    `,
+	}
+
+	infoText := []string{
+		color.New(color.FgCyan, color.Bold).Sprint("another-meet") + " - Manage Google Meet from your terminal",
+		"--------------------------------------------------",
+		color.New(color.FgYellow, color.Bold).Sprint("Get started:"),
+		"  " + color.New(color.FgGreen).Sprint("another-meet auth login") + "     # Authenticate with Google",
+		"  " + color.New(color.FgGreen).Sprint("another-meet create") + "         # Create an instant meeting",
+		"  " + color.New(color.FgGreen).Sprint("another-meet list") + "           # List upcoming meetings",
+		"  " + color.New(color.FgGreen).Sprint("another-meet join") + "           # Join the next meeting",
+		"",
+		"Run " + color.New(color.FgHiBlue).Sprint("another-meet --help") + " for a full list of commands.",
+	}
+
+	logoColors := []*color.Color{
+		color.New(color.FgHiBlue),
+		color.New(color.FgHiBlue),
+		color.New(color.FgBlue),
+		color.New(color.FgBlue),
+		color.New(color.FgCyan),
+	}
+
+	maxLines := len(logo)
+	if len(infoText) > maxLines {
+		maxLines = len(infoText)
+	}
+
+	fmt.Println()
+	for i := 0; i < maxLines; i++ {
+		logoLine := "                     " // 21 spaces padding
+		if i < len(logo) {
+			logoLine = logoColors[i].Sprint(logo[i])
+		}
+
+		infoLine := ""
+		if i < len(infoText) {
+			infoLine = infoText[i]
+		}
+
+		fmt.Printf("  %s  %s\n", logoLine, infoLine)
+	}
+	fmt.Println()
+}
 
 var cfgFile string
 
@@ -15,15 +67,12 @@ var rootCmd = &cobra.Command{
 	Use:   "another-meet",
 	Short: "Manage meetings from your terminal",
 	Long: `another-meet is a CLI tool for creating, joining, scheduling,
-and managing Google Meet meetings directly from your terminal.
-
-Get started:
-  another-meet auth login     # Authenticate with Google
-  another-meet create         # Create an instant meeting
-  another-meet list           # List upcoming meetings
-  another-meet join           # Join the next meeting`,
+and managing Google Meet meetings directly from your terminal.`,
 	SilenceErrors: true,
 	SilenceUsage:  true,
+	Run: func(cmd *cobra.Command, args []string) {
+		printWelcomeScreen(cmd)
+	},
 }
 
 // Execute runs the root command
