@@ -9,7 +9,7 @@ import tempfile
 from setuptools import setup
 from setuptools.command.install import install
 
-VERSION = "1.0.5"
+VERSION = "1.0.6"
 REPO = "parjanyaacoder/another-meet"
 
 class CustomInstall(install):
