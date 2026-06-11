@@ -4,20 +4,22 @@
 
 `another-meet` is a command-line tool for creating, joining, scheduling, and inviting people to Google Meet meetings — without ever leaving your terminal. V1 focuses entirely on **Google Meet** integration via the Google Calendar API.
 
-## Installation (Python)
+## Installation (Node.js)
 
-You can install `another-meet` globally using your preferred Python package manager:
+You can install `another-meet` globally using your preferred Node.js package manager:
 
 ```bash
-# pip
-pip install another-meet
+# npm
+npm install -g another-meet
 
-# uv
-uv pip install another-meet
+# yarn
+yarn global add another-meet
 
-# conda / mamba (via pip since it's on PyPI)
-conda install pip
-pip install another-meet
+# pnpm
+pnpm add -g another-meet
+
+# bun
+bun install -g another-meet
 ```
 
 *(Note: This package automatically downloads the pre-compiled standalone Go binary for your operating system during installation).*

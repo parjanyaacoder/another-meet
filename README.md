@@ -114,6 +114,10 @@ another-meet auth status
 another-meet auth logout
 ```
 
+| Flag | Description |
+|------|-------------|
+| `--headless` | Login from a headless environment (shows a link instead of opening a browser) |
+
 ### `create` — Create an instant meeting
 
 ```bash
@@ -153,6 +157,13 @@ another-meet list --has-meet
 another-meet list --json | jq '.[].meet_link'
 ```
 
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--from` | today | Start date (e.g. "today", "2026-06-10") |
+| `--to` | today | End date |
+| `--has-meet` | false | Only list events that have a Google Meet link |
+| `--calendar` | primary | Calendar ID to fetch events from |
+
 ### `schedule` — Schedule a future meeting
 
 ```bash
@@ -162,6 +173,15 @@ another-meet schedule --title "Design Review" --at "2026-06-10 14:00" --duration
 # Schedule for tomorrow with attendees
 another-meet schedule -t "Weekly Sync" --at "tomorrow 10:00" -d 30m -a "team@co.com"
 ```
+
+| Flag | Short | Default | Description |
+|------|-------|---------|-------------|
+| `--title` | `-t` | Quick Meeting | Meeting title |
+| `--at` | | — | When the meeting starts (e.g. "tomorrow 10:00", "2026-06-10 14:00") |
+| `--duration` | `-d` | 30m | Duration (30m, 1h, 1h30m) |
+| `--attendees` | `-a` | — | Comma-separated emails |
+| `--description` | | — | Meeting description |
+| `--calendar` | | primary | Calendar ID |
 
 ### `join` — Join a meeting
 
@@ -173,6 +193,10 @@ another-meet join
 another-meet join --id <event-id>
 ```
 
+| Flag | Description |
+|------|-------------|
+| `--id` | Specific event ID to join (if not provided, joins the next upcoming meeting) |
+
 ### `invite` — Add attendees to a meeting
 
 ```bash
@@ -182,6 +206,12 @@ another-meet invite --id <event-id> -a "charlie@co.com"
 # Invite to the next upcoming meeting
 another-meet invite --next -a "charlie@co.com,dave@co.com"
 ```
+
+| Flag | Short | Description |
+|------|-------|-------------|
+| `--id` | | Specific event ID to invite to |
+| `--next` | | Invite to the next upcoming meeting |
+| `--attendees` | `-a` | Comma-separated emails to invite |
 
 ### `version` — Print version info
 
