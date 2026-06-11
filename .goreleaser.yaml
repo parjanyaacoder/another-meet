@@ -64,7 +64,7 @@ brews:
     repository:
       owner: parjanyaacoder
       name: homebrew-another-meet
-      token: "{{ .Env.GITHUB_TOKEN }}"
+      token: "{{ .Env.TAP_GITHUB_TOKEN }}"
     commit_author:
       name: goreleaserbot
       email: bot@goreleaser.com
