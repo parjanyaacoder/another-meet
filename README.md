@@ -36,6 +36,22 @@ brew install another-meet
 go install github.com/parjanyaacoder/another-meet@latest
 ```
 
+### NPM / Node.js
+
+```bash
+npm install -g another-meet
+# or
+bun install -g another-meet
+```
+
+### Pip / Python
+
+```bash
+pip install another-meet
+# or
+uv pip install another-meet
+```
+
 ### Binary Download
 
 Download the latest release from the [Releases](https://github.com/parjanyaacoder/another-meet/releases) page.

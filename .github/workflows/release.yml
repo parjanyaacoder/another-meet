@@ -34,3 +34,33 @@ jobs:
           TAP_GITHUB_TOKEN: ${{ secrets.TAP_GITHUB_TOKEN }}
           ANOTHER_MEET_CLIENT_ID: ${{ secrets.ANOTHER_MEET_CLIENT_ID }}
           ANOTHER_MEET_CLIENT_SECRET: ${{ secrets.ANOTHER_MEET_CLIENT_SECRET }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Publish to NPM
+        run: |
+          cd npm-wrapper
+          npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install PyPI build tools
+        run: pip install setuptools wheel twine
+
+      - name: Build and Publish to PyPI
+        run: |
+          cd pypi-wrapper
+          python setup.py sdist bdist_wheel
+          twine upload dist/*
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
