@@ -8,7 +8,7 @@ import stat
 import tempfile
 import subprocess
 
-VERSION = "1.0.9"
+VERSION = "1.0.10"
 REPO = "parjanyaacoder/another-meet"
 
 def main():
@@ -24,11 +24,11 @@ def main():
         machine = platform.machine().lower()
         
         if system == "darwin":
-            os_name = "Darwin"
+            os_name = "darwin"
         elif system == "linux":
-            os_name = "Linux"
+            os_name = "linux"
         elif system == "windows":
-            os_name = "Windows"
+            os_name = "windows"
         else:
             print(f"Unsupported OS: {system}")
             sys.exit(1)
@@ -43,8 +43,8 @@ def main():
             print(f"Unsupported architecture: {machine}")
             sys.exit(1)
             
-        ext = "zip" if os_name == "Windows" else "tar.gz"
-        filename = f"another-meet_{os_name}_{arch_name}.{ext}"
+        ext = "zip" if os_name == "windows" else "tar.gz"
+        filename = f"another-meet_{VERSION}_{os_name}_{arch_name}.{ext}"
         url = f"https://github.com/{REPO}/releases/download/v{VERSION}/{filename}"
         
         try:
