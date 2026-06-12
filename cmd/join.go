@@ -3,6 +3,8 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"regexp"
+	"strings"
 
 	cal "github.com/parjanyaacoder/another-meet/internal/calendar"
 	"github.com/parjanyaacoder/another-meet/internal/ui"
@@ -16,8 +18,12 @@ var joinCmd = &cobra.Command{
 	Example: `  # Join the next upcoming meeting
   another-meet join
 
-  # Join a specific meeting by event ID
-  another-meet join --id <event-id>`,
+  # Join a specific meeting by Calendar Event ID
+  another-meet join --id <event-id>
+
+  # Join directly using a Meet code or URL
+  another-meet join --id abc-defg-hij
+  another-meet join --id https://meet.google.com/abc-defg-hij`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		ctx := context.Background()
 
@@ -28,6 +34,28 @@ var joinCmd = &cobra.Command{
 		var err error
 
 		if eventID != "" {
+			// Check if the user passed a raw Meet code or URL instead of a Calendar Event ID
+			meetCodeRegex := regexp.MustCompile(`(?i)([a-z0-9]{3}-[a-z0-9]{4}-[a-z0-9]{3})`)
+			if strings.Contains(eventID, "meet.google.com/") || meetCodeRegex.MatchString(eventID) {
+				match := meetCodeRegex.FindString(eventID)
+				if match == "" {
+					return fmt.Errorf("invalid Google Meet format. Expected format: abc-defg-hij")
+				}
+				meetLink := fmt.Sprintf("https://meet.google.com/%s", match)
+				
+				if ui.IsJSON() {
+					return ui.PrintJSON(map[string]string{
+						"title":     "Direct Meet Link",
+						"meet_link": meetLink,
+					})
+				}
+				ui.Info("Joining direct Meet code: %s", match)
+				ui.Success("Opening %s in your browser...", meetLink)
+				openURL(meetLink)
+				return nil
+			}
+
+			// Otherwise, treat it as a Calendar Event ID
 			event, err = cal.GetEvent(ctx, eventID, calendarID)
 		} else {
 			event, err = cal.GetNextMeeting(ctx, calendarID)

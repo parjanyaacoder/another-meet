@@ -3,6 +3,7 @@ package cal
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/parjanyaacoder/another-meet/internal/config"
@@ -140,6 +141,42 @@ func GetEvent(ctx context.Context, eventID, calendarID string) (*Event, error) {
 	}
 
 	return eventToResult(event), nil
+}
+
+// FindEventByMeetCode searches for an event that contains the given Google Meet code.
+func FindEventByMeetCode(ctx context.Context, meetCode, calendarID string) (*Event, error) {
+	srv, err := NewService(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	if calendarID == "" {
+		calendarID = config.DefaultCalendar()
+	}
+
+	// Search recent past and all future events
+	timeMin := time.Now().AddDate(0, -1, 0) // Look back up to 1 month
+	
+	call := srv.Events.List(calendarID).
+		TimeMin(timeMin.Format(time.RFC3339)).
+		Q(meetCode). // Use free text search for the meet code
+		MaxResults(50).
+		SingleEvents(true).
+		OrderBy("startTime")
+
+	events, err := call.Do()
+	if err != nil {
+		return nil, fmt.Errorf("failed to search events: %w", err)
+	}
+
+	for _, item := range events.Items {
+		e := eventToResult(item)
+		if strings.Contains(e.MeetLink, meetCode) {
+			return e, nil
+		}
+	}
+
+	return nil, fmt.Errorf("no calendar event found matching Google Meet code: %s", meetCode)
 }
 
 // AddAttendees adds attendees to an existing event.

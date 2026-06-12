@@ -48,19 +48,12 @@ another-meet join
 # Login via browser (OAuth2 + PKCE)
 another-meet auth login
 
-# Login from SSH / headless environment
-another-meet auth login --headless
-
 # Check who you're authenticated as
 another-meet auth status
 
 # Remove stored credentials
 another-meet auth logout
 ```
-
-| Flag | Description |
-|------|-------------|
-| `--headless` | Login from a headless environment (shows a link instead of opening a browser) |
 
 ### `create` — Create an instant meeting
 

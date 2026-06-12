@@ -5,7 +5,6 @@ import (
 	"crypto/rand"
 	"crypto/sha256"
 	"encoding/base64"
-	"encoding/json"
 	"fmt"
 	"net"
 	"net/http"
@@ -81,22 +80,140 @@ func LoginWithBrowser(ctx context.Context) (*oauth2.Token, error) {
 			return
 		}
 
-		w.Header().Set("Content-Type", "text/html")
 		fmt.Fprint(w, `<!DOCTYPE html>
-<html>
-<head><title>another-meet</title>
-<style>
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; 
-         display: flex; align-items: center; justify-content: center; height: 100vh; 
-         margin: 0; background: #0f172a; color: #e2e8f0; }
-  .card { text-align: center; padding: 48px; }
-  h1 { color: #34d399; font-size: 24px; margin-bottom: 8px; }
-  p { color: #94a3b8; font-size: 16px; }
-</style></head>
-<body><div class="card">
-  <h1>✓ Authentication successful!</h1>
-  <p>You can close this tab and return to your terminal.</p>
-</div></body></html>`)
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Authentication Successful | another-meet</title>
+  <link href="https://fonts.googleapis.com/css2?family=Product+Sans:wght@400;500;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --border-color: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #10b981;
+      --accent-hover: #059669;
+    }
+    
+    body { 
+      font-family: 'Inter', -apple-system, sans-serif; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      min-height: 100vh; 
+      margin: 0; 
+      background: var(--bg-color); 
+      color: var(--text-main);
+    }
+
+    .container {
+      text-align: center;
+      padding: 48px 40px;
+      max-width: 480px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2), 0 10px 10px -5px rgba(0,0,0,0.1);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+    }
+
+    .logo-text {
+      font-family: 'Product Sans', 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 26px;
+      letter-spacing: -0.5px;
+      color: var(--text-main);
+    }
+
+    .tagline {
+      font-size: 15px;
+      color: var(--text-muted);
+      margin: 0 0 36px 0;
+      line-height: 1.5;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border-color);
+      margin: 0 0 36px 0;
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 500;
+      margin: 0 0 32px 0;
+      color: var(--accent);
+    }
+
+    .close-btn {
+      background-color: var(--accent);
+      color: #ffffff;
+      border: none;
+      padding: 12px 28px;
+      font-size: 15px;
+      font-weight: 500;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: background-color 0.2s;
+    }
+
+    .close-btn:hover {
+      background-color: var(--accent-hover);
+    }
+
+    .fallback-text {
+      display: none;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="brand">
+      <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 16L22 20V4L16 8V16Z" fill="#34A853"/>
+        <path d="M14 6H4C2.9 6 2 6.9 2 8V16C2 17.1 2.9 18 4 18H14C15.1 18 16 17.1 16 16V8C16 6.9 15.1 6 14 6Z" fill="#4285F4"/>
+      </svg>
+      <div class="logo-text">another-meet</div>
+    </div>
+    <p class="tagline">Manage Google Meet meetings from your terminal.</p>
+    
+    <div class="divider"></div>
+    
+    <h1>✓ Authentication Successful</h1>
+    
+    <button class="close-btn" onclick="closeWindow()">Close this window</button>
+    <p class="fallback-text" id="fallback">You can now safely close this tab.</p>
+  </div>
+
+  <script>
+    function closeWindow() {
+      window.close();
+      setTimeout(() => {
+        document.getElementById('fallback').style.display = 'block';
+      }, 300);
+    }
+  </script>
+</body>
+</html>`)
 
 		codeCh <- code
 	})
@@ -144,108 +261,6 @@ func LoginWithBrowser(ctx context.Context) (*oauth2.Token, error) {
 	return token, nil
 }
 
-// LoginHeadless performs the device authorization grant flow for headless environments.
-func LoginHeadless(ctx context.Context) (*oauth2.Token, error) {
-	config, err := OAuthConfig("")
-	if err != nil {
-		return nil, err
-	}
-
-	// Request device code
-	deviceResp, err := requestDeviceCode(ctx, config)
-	if err != nil {
-		return nil, fmt.Errorf("failed to request device code: %w", err)
-	}
-
-	fmt.Printf("\n  Visit:  %s\n", deviceResp.VerificationURL)
-	fmt.Printf("  Code:   %s\n\n", deviceResp.UserCode)
-
-	// Poll for token
-	return pollForToken(ctx, config, deviceResp)
-}
-
-type deviceCodeResponse struct {
-	DeviceCode      string `json:"device_code"`
-	UserCode        string `json:"user_code"`
-	VerificationURL string `json:"verification_url"`
-	ExpiresIn       int    `json:"expires_in"`
-	Interval        int    `json:"interval"`
-}
-
-func requestDeviceCode(ctx context.Context, config *oauth2.Config) (*deviceCodeResponse, error) {
-	resp, err := http.PostForm("https://oauth2.googleapis.com/device/code", map[string][]string{
-		"client_id": {config.ClientID},
-		"scope":     {config.Scopes[0]},
-	})
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	var result deviceCodeResponse
-	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return nil, err
-	}
-	return &result, nil
-}
-
-func pollForToken(ctx context.Context, config *oauth2.Config, device *deviceCodeResponse) (*oauth2.Token, error) {
-	interval := time.Duration(device.Interval) * time.Second
-	if interval == 0 {
-		interval = 5 * time.Second
-	}
-	deadline := time.Now().Add(time.Duration(device.ExpiresIn) * time.Second)
-
-	for {
-		if time.Now().After(deadline) {
-			return nil, fmt.Errorf("device authorization expired")
-		}
-
-		select {
-		case <-ctx.Done():
-			return nil, ctx.Err()
-		case <-time.After(interval):
-		}
-
-		resp, err := http.PostForm("https://oauth2.googleapis.com/token", map[string][]string{
-			"client_id":     {config.ClientID},
-			"client_secret": {config.ClientSecret},
-			"device_code":   {device.DeviceCode},
-			"grant_type":    {"urn:ietf:params:oauth:grant-type:device_code"},
-		})
-		if err != nil {
-			continue
-		}
-
-		var result struct {
-			AccessToken  string `json:"access_token"`
-			RefreshToken string `json:"refresh_token"`
-			TokenType    string `json:"token_type"`
-			ExpiresIn    int    `json:"expires_in"`
-			Error        string `json:"error"`
-		}
-
-		json.NewDecoder(resp.Body).Decode(&result)
-		resp.Body.Close()
-
-		switch result.Error {
-		case "authorization_pending":
-			continue
-		case "slow_down":
-			interval += 5 * time.Second
-			continue
-		case "":
-			return &oauth2.Token{
-				AccessToken:  result.AccessToken,
-				RefreshToken: result.RefreshToken,
-				TokenType:    result.TokenType,
-				Expiry:       time.Now().Add(time.Duration(result.ExpiresIn) * time.Second),
-			}, nil
-		default:
-			return nil, fmt.Errorf("authorization failed: %s", result.Error)
-		}
-	}
-}
 
 // generatePKCE creates a PKCE code verifier and S256 challenge
 func generatePKCE() (verifier, challenge string, err error) {

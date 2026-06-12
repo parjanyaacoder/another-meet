@@ -19,35 +19,21 @@ var authLoginCmd = &cobra.Command{
 	Use:   "login",
 	Short: "Authenticate with your Google account",
 	Long: `Log in to your Google account to access Calendar and Meet.
-By default, opens your browser for authentication.
-Use --headless for environments without a browser (SSH, containers).`,
+By default, opens your browser for authentication.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		ctx := context.Background()
-		headless, _ := cmd.Flags().GetBool("headless")
-
 		if auth.TokenExists() {
 			ui.Warn("Already authenticated. Use 'another-meet auth logout' first to re-authenticate.")
 			return nil
 		}
 
-		if headless {
-			ui.Info("Starting device authorization flow...")
-			t, err := auth.LoginHeadless(ctx)
-			if err != nil {
-				return fmt.Errorf("authentication failed: %w", err)
-			}
-			if err := auth.SaveToken(t); err != nil {
-				return fmt.Errorf("failed to save token: %w", err)
-			}
-		} else {
-			ui.Info("Opening browser for Google authorization...")
-			t, err := auth.LoginWithBrowser(ctx)
-			if err != nil {
-				return fmt.Errorf("authentication failed: %w", err)
-			}
-			if err := auth.SaveToken(t); err != nil {
-				return fmt.Errorf("failed to save token: %w", err)
-			}
+		ui.Info("Opening browser for Google authorization...")
+		t, err := auth.LoginWithBrowser(ctx)
+		if err != nil {
+			return fmt.Errorf("authentication failed: %w", err)
+		}
+		if err := auth.SaveToken(t); err != nil {
+			return fmt.Errorf("failed to save token: %w", err)
 		}
 
 		// Try to get user email
@@ -67,6 +53,12 @@ var authStatusCmd = &cobra.Command{
 	Short: "Check authentication status",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if !auth.TokenExists() {
+			if ui.IsJSON() {
+				return ui.PrintJSON(map[string]interface{}{
+					"authenticated": false,
+					"error":         "not_authenticated",
+				})
+			}
 			ui.Error("Not authenticated — run 'another-meet auth login' to get started.")
 			return nil
 		}
@@ -74,9 +66,23 @@ var authStatusCmd = &cobra.Command{
 		ctx := context.Background()
 		email, err := auth.GetUserEmail(ctx)
 		if err != nil {
+			if ui.IsJSON() {
+				return ui.PrintJSON(map[string]interface{}{
+					"authenticated": true,
+					"email":         "",
+					"error":         err.Error(),
+				})
+			}
 			ui.Warn("Token found but may be invalid: %v", err)
 			ui.Info("Run 'another-meet auth login' to re-authenticate.")
 			return nil
+		}
+
+		if ui.IsJSON() {
+			return ui.PrintJSON(map[string]interface{}{
+				"authenticated": true,
+				"email":         email,
+			})
 		}
 
 		ui.Success("Authenticated as %s", email)
@@ -103,7 +109,6 @@ var authLogoutCmd = &cobra.Command{
 }
 
 func init() {
-	authLoginCmd.Flags().Bool("headless", false, "use device authorization flow (for SSH/headless environments)")
 	authCmd.AddCommand(authLoginCmd)
 	authCmd.AddCommand(authStatusCmd)
 	authCmd.AddCommand(authLogoutCmd)

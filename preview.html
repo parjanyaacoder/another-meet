@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Authentication Successful | another-meet</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Product+Sans:wght@400;500;700&family=Inter:wght@400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --border-color: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #10b981;
+      --accent-hover: #059669;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      background: var(--bg-color);
+      color: var(--text-main);
+    }
+
+    .container {
+      text-align: center;
+      padding: 48px 40px;
+      max-width: 480px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+    }
+
+    .logo-text {
+      font-family: 'Product Sans', 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 26px;
+      letter-spacing: -0.5px;
+      color: var(--text-main);
+    }
+
+    .tagline {
+      font-size: 15px;
+      color: var(--text-muted);
+      margin: 0 0 36px 0;
+      line-height: 1.5;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border-color);
+      margin: 0 0 36px 0;
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 500;
+      margin: 0 0 32px 0;
+      color: var(--accent);
+    }
+
+    .close-btn {
+      background-color: var(--accent);
+      color: #ffffff;
+      border: none;
+      padding: 12px 28px;
+      font-size: 15px;
+      font-weight: 500;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: background-color 0.2s;
+    }
+
+    .close-btn:hover {
+      background-color: var(--accent-hover);
+    }
+
+    .fallback-text {
+      display: none;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 16px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="brand">
+      <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 16L22 20V4L16 8V16Z" fill="#34A853" />
+        <path d="M14 6H4C2.9 6 2 6.9 2 8V16C2 17.1 2.9 18 4 18H14C15.1 18 16 17.1 16 16V8C16 6.9 15.1 6 14 6Z"
+          fill="#4285F4" />
+      </svg>
+      <div class="logo-text">another-meet</div>
+    </div>
+    <p class="tagline">Manage meetings from your terminal.</p>
+
+    <div class="divider"></div>
+
+    <h1>✓ Authentication Successful</h1>
+
+    <button class="close-btn" onclick="closeWindow()">Close this window</button>
+    <p class="fallback-text" id="fallback">You can now safely close this tab.</p>
+  </div>
+
+  <script>
+    function closeWindow() {
+      window.close();
+      setTimeout(() => {
+        document.getElementById('fallback').style.display = 'block';
+      }, 300);
+    }
+  </script>
+</body>
+
+</html>

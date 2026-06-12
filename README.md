@@ -30,11 +30,6 @@ brew tap parjanyaacoder/another-meet
 brew install another-meet
 ```
 
-### Go Install
-
-```bash
-go install github.com/parjanyaacoder/another-meet@latest
-```
 
 ### Node.js (npm / yarn / pnpm / bun)
 
@@ -76,6 +71,15 @@ tar -xzf another-meet_*_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m).tar
 sudo mv another-meet /usr/local/bin/
 ```
 
+### Go Install (For Contributors)
+
+> [!WARNING]
+> Compiling from source using `go install` will not include the pre-configured Google OAuth credentials. If you install via Go, you must provide your own credentials by exporting `ANOTHER_MEET_CLIENT_ID` and `ANOTHER_MEET_CLIENT_SECRET`. **End-users are strongly recommended to install via npm, pip, or brew.**
+
+```bash
+go install github.com/parjanyaacoder/another-meet@latest
+```
+
 ---
 
 ## Quick Start
@@ -103,9 +107,6 @@ another-meet join
 ```bash
 # Login via browser (OAuth2 + PKCE)
 another-meet auth login
-
-# Login from SSH / headless environment
-another-meet auth login --headless
 
 # Check who you're authenticated as
 another-meet auth status
