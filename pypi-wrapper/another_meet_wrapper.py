@@ -8,7 +8,7 @@ import stat
 import tempfile
 import subprocess
 
-VERSION = "1.0.10"
+VERSION = "1.1.0"
 REPO = "parjanyaacoder/another-meet"
 
 def main():
