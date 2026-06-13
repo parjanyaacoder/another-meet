@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>another-meet | Google Meet from the Terminal</title>
+  <meta name="description" content="Manage Google Meet meetings right from your terminal. Create, join, and schedule meetings without ever leaving your command line.">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <div class="bg-blob"></div>
+  
+  <nav>
+    <a href="index.html" class="logo">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+      another-meet
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="https://github.com/parjanyaacoder/another-meet">GitHub</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <h1>Stay in the terminal.<br>Join the meeting.</h1>
+      <p>A lightning-fast, open-source CLI tool to create, schedule, list, and join Google Meet meetings without breaking your flow.</p>
+      
+      <div class="terminal">
+        <div class="terminal-header">
+          <div class="dot red"></div>
+          <div class="dot yellow"></div>
+          <div class="dot green"></div>
+        </div>
+        <div class="terminal-body">
+          <div class="cmd-line">
+            <span class="prompt">~</span>
+            <span class="cmd-text" id="install-cmd">npm install -g another-meet</span>
+            <button class="copy-btn" data-clipboard-target="install-cmd">Copy</button>
+          </div>
+          <div class="terminal-output">
+            <span class="output-highlight">added 42 packages in 2s</span>
+          </div>
+          
+          <div class="cmd-line" style="margin-top: 1.5rem;">
+            <span class="prompt">~</span>
+            <span class="cmd-text" id="create-cmd">another-meet create -t "Quick Sync" --open</span>
+            <button class="copy-btn" data-clipboard-target="create-cmd">Copy</button>
+          </div>
+          <div class="terminal-output">
+            ✓ Meeting created!
+            
+              Title:  Quick Sync
+              Meet:   <span class="output-highlight">https://meet.google.com/abc-defg-hij</span>
+              Time:   10:30 AM — 11:00 AM
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features">
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>Instant Meetings</h3>
+        <p>Type one command to instantly generate a Meet link and pop it open in your browser.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📅</div>
+        <h3>Schedule Ahead</h3>
+        <p>Schedule meetings for tomorrow, invite your team, and send calendar invites directly.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🤖</div>
+        <h3>Agent Friendly</h3>
+        <p>Perfect for natural language prompting inside AI-driven IDEs like Cursor or Gemini.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 parjanyaacoder. Released under the MIT License.</p>
+  </footer>
+
+  <script src="assets/scripts.js"></script>
+</body>
+</html>
