@@ -122,17 +122,30 @@ func NewCalendarService(ctx context.Context) (*calendar.Service, error) {
 	return srv, nil
 }
 
-// GetUserEmail retrieves the current user's email from the calendar API.
+// GetUserEmail retrieves the current user's email using the userinfo API.
 func GetUserEmail(ctx context.Context) (string, error) {
-	srv, err := NewCalendarService(ctx)
+	token, oauthConfig, err := GetClient(ctx)
 	if err != nil {
 		return "", err
 	}
 
-	cal, err := srv.CalendarList.Get("primary").Do()
+	client := oauthConfig.Client(ctx, token)
+	resp, err := client.Get("https://www.googleapis.com/oauth2/v2/userinfo")
 	if err != nil {
-		return "", fmt.Errorf("failed to get calendar info: %w", err)
+		return "", fmt.Errorf("failed to fetch user info: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		return "", fmt.Errorf("failed to fetch user info: status %d", resp.StatusCode)
 	}
 
-	return cal.Id, nil
+	var userInfo struct {
+		Email string `json:"email"`
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&userInfo); err != nil {
+		return "", fmt.Errorf("failed to decode user info: %w", err)
+	}
+
+	return userInfo.Email, nil
 }

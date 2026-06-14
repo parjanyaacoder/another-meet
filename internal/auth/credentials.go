@@ -36,7 +36,11 @@ func OAuthConfig(redirectURL string) (*oauth2.Config, error) {
 		return &oauth2.Config{
 			ClientID:     clientID,
 			ClientSecret: clientSecret,
-			Scopes:       []string{calendar.CalendarScope},
+			Scopes: []string{
+				calendar.CalendarEventsScope,
+				"https://www.googleapis.com/auth/userinfo.email",
+				"openid",
+			},
 			Endpoint:     google.Endpoint,
 			RedirectURL:  redirectURL,
 		}, nil
@@ -64,7 +68,11 @@ func OAuthConfig(redirectURL string) (*oauth2.Config, error) {
 	return &oauth2.Config{
 		ClientID:     creds.Installed.ClientID,
 		ClientSecret: creds.Installed.ClientSecret,
-		Scopes:       []string{calendar.CalendarScope},
+		Scopes: []string{
+			calendar.CalendarEventsScope,
+			"https://www.googleapis.com/auth/userinfo.email",
+			"openid",
+		},
 		Endpoint:     google.Endpoint,
 		RedirectURL:  redirectURL,
 	}, nil
